@@ -1,0 +1,30 @@
+.main-left{width:206px;background:url(../images/leftbg.jpg) repeat-y right top #417eb7;padding-bottom:30px}
+/*.otbr{width:10px;background:url(../images/leftbg.jpg) repeat-y right top;}
+*/
+.otbr{position:relative;left:-197px}
+
+.topif{background:url(../images/topifbg.jpg) repeat-x;padding-top:5px;}
+.all-data{margin:0 0 12px 12px;}
+.all-data img{border:1px solid #d9d9d9;background:#fff;padding:3px;}
+.nav-title{background:url(../images/leftnavbg.jpg) no-repeat;height:31px;line-height:31px;padding:0 25px 0 40px;font-size:14px}
+.jian{background:url(../images/icon1-1.jpg) no-repeat right center;display:block;color:#417eb7;font-weight:bold}
+.jian:hover{text-decoration:none}
+.jia{background-image:url(../images/icon1-2.jpg);}
+
+.nav-list{padding-right:13px}
+.nav-list li a{color:#6f533d;display:block;height:30px;line-height:30px;*vertical-align:middle;color:#b9ddff;padding:0 25px 0 55px}
+.icon2{background:url(../images/icon2-1.jpg) no-repeat 45px center;}
+.nav-list li a:hover,.nav-list .on a{text-decoration:none;}
+.zinavon{background:url(../images/icon2-2.jpg) no-repeat 43px center #2d689f;}
+.navbr{background:#2d689f}
+.navbr li a{padding-left:67px}
+
+.nav-title-t{background:url(../images/navtlbg-t.jpg) repeat-x;height:36px;line-height:36px;padding:0 15px 0 40px;font-size:14px;margin:0 13px 0 3px}
+.nav-title-t a{background:url(../images/icon3.jpg) no-repeat right center;display:block;color:#fff}
+
+.scroll{background:url(../images/scroll.jpg) no-repeat;width:9px;height:41px;left:197px;position:fixed;top:80px;cursor:pointer;z-index:99}
+*html,*html body{background-image:url(about:blank);background-attachment:fixed} /*解决悬浮元素带来的振动bug*/
+*html .scroll{position:absolute;left:expression(eval(document.documentElement.scrollLeft))-197;top:expression(eval(document.documentElement.scrollTop))-80;}
+.scroll-t{background-image:url(../images/scroll-t.jpg);left:0}
+
+

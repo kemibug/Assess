@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{$cfg['POWER'][$m][name]}-{$cfg['POWER'][$m][detail][$a]}-{$p_systitle}</title>
+<link href="{$p_csspath}reset.css" rel="stylesheet" type="text/css" />
+<link href="{$p_csspath}right.css" rel="stylesheet" type="text/css" />
+<script src="{$p_jspath}jquery-1.5.2.min.js" type="text/javascript"></script>
+<script src="{$p_jspath}select.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(function(){
+        // 弹出框 edit
+        $(".edit").bind("click",function(){
+            var uid = $(this).attr("id");
+
+            var offsettop = $(this).offset().top;
+            var offsetleft = $(this).offset().left;
+
+            $.post("./index.php?m={$m}&a={$a}",{uid:uid,act:"edit"},function(data){
+                if(data == "no auth"){
+                    alert("没有权限");
+                    return false;
+                }
+
+                $(".tck").html(data);
+                $(".tck").show();
+                $(".tck").css({"top":offsettop+18,"left":offsetleft-280});
+
+                // select框模拟
+                $('.jssel').selectBox({'selectClassName':'.jsk','selectList':'.condt'});
+
+                // 让页面滚下来
+                $(".save").focus();
+
+                $(".save").bind("click",function(){
+                    var uid = $(this).attr("id");
+                    var gid = $("#gid").val();
+                    var grouptitle = $("#grouptitle").val();
+
+                    $.post("./index.php?m={$m}&a={$a}",{uid:uid,gid:gid,act:"update"},function(data){
+                        if(data == "no auth"){
+                            alert("没有权限");
+                            return false;
+                        }
+
+                        if(data != "true"){
+                            alert(data);
+                            return false;
+                        }
+
+                        var u = $("#u").val();
+                        if(u == "") u = "./index.php?m={$m}&a={$a}";
+                        location.href = u;
+                    });
+                });
+            });
+        });
+
+        //select框模拟
+        $('.jssel').selectBox({'selectClassName':'.jsk','selectList':'.condt'});
+    });
+
+    $(".close-t").live("click",function(){
+        $(".tck").html();
+        $(".tck").hide();
+    });
+
+    /**隔行变色**/  
+    function changColor(){
+        var table_Element = document.getElementById("table_style");  
+        var tr_Element = table_Element.rows;  
+        for(var i=0;i<tr_Element.length;i++){  
+            if(i%2==0)  
+            {  
+                tr_Element[i].className = "bgfff";  
+            }else{  
+                tr_Element[i].className = "bgf0";  
+            }  
+        }  
+    }; 
+
+    /**当页面加载时执行**/  
+    window.onload = function (){  
+        changColor(); 
+    }; 
+</script>
+</head>
+
+<body>
+<div class="bg">
+    <div class="rtop">
+        <p class="icon1">{$cfg['POWER'][$m][name]} > {$cfg['POWER'][$m][detail][$a]}</p>
+    </div>
+    <div class="pad25" style="zoom:1;">
+        <div class="brdbt jsline">
+            <form name="frm" action="?m={$m}&a={$a}" method="post" class="clearfix">
+                <span>搜索：</span>
+                <div class="jssel" style="z-index:99">
+                    <input type="text" value="<!--# echo($search_gid ? $arr_groups[$search_gid] : '选择角色'); #-->" class="jsk" readonly /><input type="hidden" name="search_gid" id="search_gid" class="hiddeninput" value="{$search_gid}" />
+
+                    <ul style="display: none;z-index:100" class="condt">
+                        <li id="0"><a href="javascript:void(0)">选择角色</a></li>
+                        <!--#
+                            if(is_array($arr_groups)){
+                                foreach($arr_groups as $k => $v){
+                        #-->
+                        <li id="{$k}"><a href="javascript:void(0)">{$v}</a></li>
+                        <!--#
+                                }
+                            }
+                        #-->
+                    </ul>
+                </div>
+
+                <div class="sechk"><input type="text" value="<!--# echo($search_name ? $search_name : '请输入姓名'); #-->" name="search_name" id="search_name" class="width135" onfocus="if(value=='请输入姓名'){value=''}" onblur="if(value==''){value='请输入姓名'}" /></div>
+
+                <input type="hidden" name="act" value="search" />
+                <input type="submit" value="搜索" class="btn48" />
+            </form>
+        </div>
+
+        <div class="mrtb10">
+            <table cellpadding="0" cellspacing="0" width="100%" class="jbtab" id="table_style">
+                <tr>
+                    <th width="120"><p class="zjtabp">姓名</p></th>
+                    <th width="90">角色</th>
+                    <th><p class="zjtabp">所在部门</p></th>
+                    <th width="128">最后登录</th>
+                    <th width="128">操作</th>
+                </tr>
+                <!--#
+                    if(is_array($rs)){
+                        foreach($rs as $r){
+                #-->
+                <tr>
+                    <td><p class="zjtabp">{$r[username]}</p></td>
+                    <td id="gid_{$r[uid]}">{$r[groupname]}</td>
+                    <td><p class="zjtabp">{$r[deptlist]}</p></td>
+                    <td><!--# echo($r['lastlogin'] ? date("Y/m/d H:i",$r['lastlogin']) : "-"); #--></td>
+                    <td><!--# if($r[canedit] == 1){ #--><a id="{$r[uid]}" href="javascript:void(0)" class="bjwrt edit">编辑</a><!--# } #--></td>
+                </tr>
+                <!--#
+                        }
+                    }
+                #-->
+            </table>
+            <p class="pagenum">{$page_nav}</p>
+        </div>
+    </div>
+</div>
+
+<div class="tck" style="display:none;z-index:999"></div>
+
+<input type="hidden" id="u" value="{$pageurl}&pn={$page}" />
+
+</body>
+</html>

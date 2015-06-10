@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>绩效考核系统</title>
+<link href="http://221.231.141.162/tlfjk/static/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="http://221.231.141.162/tlfjk/static/css/top.css" rel="stylesheet" type="text/css" />
+<script src="http://221.231.141.162/tlfjk/static/js/jquery-1.5.2.min.js" type="text/javascript"></script>
+ 
+<script type="text/javascript"> 
+    var dateTime = new Date(2015,05,14,10,06,04);
+ 
+    function bodyLoad(){
+        str_time = dateTime.toLocaleString();
+        str_time = str_time.substr(str_time.indexOf(" "));
+        document.getElementById("time").value = str_time;
+        dateTime.setSeconds(dateTime.getSeconds()+1);
+        setTimeout(bodyLoad,1000);
+    }
+ 
+    function get_oa_msg(){
+        if(uid == "0" || uid == ""){
+            return false;
+        }
+ 
+        $.get("./index.php?m=api&a=get_oa_msg",{uid:uid},function(data){
+            if(data == "no auth"){
+                return false;
+            }
+        });
+    }
+ 
+    var uid = "tanyinbing";
+    setInterval("get_oa_msg()",60000);
+</script>
+ 
+</head>
+ 
+<body onload="bodyLoad()">
+<div id="header">
+    <h1 title=""><img src="http://221.231.141.162/salary/static/images/toplogo.jpg" alt="" title=""/></h1>
+    <div class="topbr"><a href="?m=main" target="mainFrame" class="zm">桌面</a><a href="http://oa.house365.com/general/" target="_blank" class="oa">OA系统</a><a href="?m=exit" class="tc">退出</a></div>
+    <p class="yhif">
+        <span>檀银兵，上午好！</span><span class="lbg ie7">现在时刻：<input type="text" id="time" style="width: 80px;" /></span><span class="lbg">登陆身份：平台开发部 - 集团公司部门经理</span>
+    </p>
+</div>
+ 
+</body>
+</html>

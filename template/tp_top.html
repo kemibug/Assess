@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>{$p_systitle}</title>
+<link href="{$p_csspath}reset.css" rel="stylesheet" type="text/css" />
+<link href="{$p_csspath}top.css" rel="stylesheet" type="text/css" />
+<script src="{$p_jspath}jquery-1.5.2.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+    var dateTime = new Date({$str_cur_time});
+
+    function bodyLoad(){
+        str_time = dateTime.toLocaleString();
+        str_time = str_time.substr(str_time.indexOf(" "));
+        document.getElementById("time").value = str_time;
+        dateTime.setSeconds(dateTime.getSeconds()+1);
+        setTimeout(bodyLoad,1000);
+    }
+
+    function get_oa_msg(){
+        if(uid == "0" || uid == ""){
+            return false;
+        }
+
+        $.get("./index.php?m=api&a=get_oa_msg",{uid:uid},function(data){
+            if(data == "no auth"){
+                return false;
+            }
+        });
+    }
+
+    var uid = "{$p_uid}";
+    setInterval("get_oa_msg()",60000);
+</script>
+
+</head>
+
+<body onload="bodyLoad()">
+<div id="header">
+    <h1 title=""><img src="{$p_imgpath}toplogo.jpg" alt="" title=""/></h1>
+    <div class="topbr"><a href="?m=main" target="mainFrame" class="zm">桌面</a><a href="{$p_oa}general/" target="_blank" class="oa">OA系统</a><!--# if(isset($cfg['help_link'][$p_gid])){ #--><a href="?m=help&title=<!--# echo(urlencode('使用说明')); #-->&attach={$cfg['help_link'][$p_gid]}" target="_blank" class="help">帮助</a><!--# } #--><a href="?m=exit" class="tc">退出</a></div>
+    <p class="yhif">
+        <span>{$p_username}，{$str_hello}</span><span class="lbg ie7">现在时刻：<input type="text" id="time" style="width: 80px;" /></span><span class="lbg">登陆身份：{$p_userinfo[department]} - {$p_userinfo[position]}</span>
+    </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+<?php
+print <<<EOT
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>{$p_systitle}</title>
+<link href="{$p_csspath}reset.css" rel="stylesheet" type="text/css" />
+<link href="{$p_csspath}left.css" rel="stylesheet" type="text/css" />
+<link href="{$p_csspath}right.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="{$p_jspath}jquery-1.5.2.min.js"></script> 
+<script type="text/javascript">
+    $(function(){
+        $('.nav-title').bind('click',function(){
+            var self = $(this);
+            $(self.next()).toggle();
+            $(this).find(".jian").toggleClass("jia");
+
+            //点击收起时底部边框为0
+            var i = $(this).parent().index();
+            if( i!= 3){
+                $(this).toggleClass("bd");
+            }
+        });
+
+        //内部子菜单展开与收起
+        $('.zinav').bind('click',function(){
+            var self = $(this);
+            $(self.next()).toggle();
+            $(this).toggleClass("zinavon");
+        });
+
+        //边栏高度
+        resizeleft();
+    });
+
+    function resizeleft(){
+        //边栏高度
+        var windowht = $(window).height();
+        $(".gund").css("height",windowht);
+
+        var brdrhheight = parseInt($(".brdrh").css("height"));
+        if(brdrhheight < windowht-30){
+            $(".brdrh").css("height",windowht-30);
+        }
+    }
+</script>
+</head>
+
+<body>
+    <div class="gund" style="overflow-x:hidden;overflow-y:scroll">
+        <div class="main-left brdrh" id="d_hoscon" style="margin-top: 0px;">
+            <div class="topif"><div class="all-data">{$photourl}</div></div>
+            <ul class="nav">
+                
+EOT;
+
+                    if(is_array($cfg['POWER'])){
+                        foreach($cfg['POWER'] as $k=>$v){
+                            $flag = 0;
+                            if(is_array($v['detail'])){
+                                foreach($v['detail'] as $key => $value){
+                                    $flag = $flag + $p_power[$k.'_'.$key];
+                                }
+                            }
+
+                            if($flag > 0){
+                print <<<EOT
+
+                <li>
+                    <h3 class="nav-title"><a href="javascript:void(0)" class="jian">{$v[name]}</a></h3>
+                    <ul class="nav-list">
+                        
+EOT;
+
+                                if(is_array($v['detail'])){
+                                    foreach($v['detail'] as $key => $value){
+                                        if($p_power[$k.'_'.$key] == 1 && $key != 'checkdetails' && $key != 'addetail'){
+											if( $key == 'changepass' && $user[parttime] != 1 ) {
+												continue;
+											}
+                        print <<<EOT
+
+                        <li><a href="index.php?m={$k}&a={$key}" target="mainFrame" class="icon2">{$value}</a></li>
+                        
+EOT;
+
+                                        }
+                                    }
+                                }
+                        print <<<EOT
+
+                    </ul>
+                </li>
+                
+EOT;
+
+                            }
+                        }
+                    }
+                print <<<EOT
+
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+EOT;
+?>

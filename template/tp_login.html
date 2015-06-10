@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="GBK">
+    <title>{$p_systitle}</title>
+    <link href="{$p_csspath}reset.css" rel="stylesheet" type="text/css" />
+    <link href="{$p_csspath}right.css" rel="stylesheet" type="text/css" />
+
+    <script language="javascript">
+        function chkfrm(frm){
+            if(frm.username == ''){
+                alert('请输入用户名');
+                frm.username.focus();
+                return false;
+            }
+
+            if(frm.password == ''){
+                alert('请输入密码');
+                frm.password.focus();
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+<div class="bg">
+  <div class="smdlkuang">
+    <div class="sm_login">
+      <form onsubmit="return chkfrm(this);" id="login" method="post" action="">
+        <input type="hidden" value="loginbyuid" name="a">
+        <div class="smren"><i></i></div>
+        <div class="smcem">
+            用户名 <input type="text" name="username" />
+        </div>
+        <div class="smcem">
+            密&nbsp;&nbsp;码 <input type="password" name="password" />
+        </div>
+        <input type="submit" class="smdenglu" value="登 录" />
+        <a href="{$p_oa}">从OA登录</a>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>

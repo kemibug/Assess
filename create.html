@@ -1,0 +1,582 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>活动管理-考试管理-E-Learning在线学习系统</title>
+<link href="http://221.231.141.162/el/static/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="http://221.231.141.162/el/static/css/right.css" rel="stylesheet" type="text/css" />
+<script src="http://221.231.141.162/el/static/js/jquery-1.5.2.min.js" type="text/javascript"></script>
+<script src="http://221.231.141.162/el/static/js/select.js" type="text/javascript"></script>
+ 
+<link href="http://221.231.141.162/el/static/css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
+<script src="http://221.231.141.162/el/static/js/jquery.autocomplete.min.js" type="text/javascript"></script>
+ 
+<link href="http://221.231.141.162/el/static/css/calendar-new.css" rel="stylesheet" type="text/css" />
+<script src="http://221.231.141.162/el/static/js/calendar-new.js" type="text/javascript"></script>
+<script src="http://221.231.141.162/el/static/js/calendar-setup-new.js" type="text/javascript"></script>
+<script src="http://221.231.141.162/el/static/js/calendar-zh-new.js" type="text/javascript"></script>
+ 
+<script type="text/javascript"> 
+    $(function(){
+        //select框模拟
+        $('.jssel').selectBox({'selectClassName':'.jsk','selectList':'.condt'});
+ 
+        $('.adduser').click(function(){
+            var username = $("#username").val();
+            var uids = $("#uids").val();
+ 
+            if(username == "" || username == "请输入"){
+                alert("请输入参与人姓名~");
+                return false;
+            }
+ 
+            var arr = username.split(',');
+ 
+            if(arr.length != 4){
+                alert("参与人姓名格式错误\n正确格式为：姓名,部门,拼音,\n\n请使用联想功能录入");
+                return false;
+            }
+ 
+            var _uid = arr[2];
+            var uid = arr[2] + "," + arr[0];
+            username = arr[0];
+ 
+            if(uids != ""){
+                uids = uids + "|";
+            }
+ 
+            if(uids.indexOf("|" + uid + "|") > 0 || uids.indexOf(uid + "|")==0){
+                alert("该参与人已存在~~");
+                return false;
+            }
+            else{
+                uids = uids + uid;
+ 
+                $("#uids").val(uids);
+                $(".div_userlist").show();
+ 
+                _uid = _uid.replace(/ /g,"_");
+                $('<span id="span_' + _uid + '">' + username + '<a id="' + uid + '" href="javascript:void(0)" class="close deluser"></a></span>').prependTo(".userlist");
+            }
+        });
+ 
+        $('.deluser').live('click',function(){
+            var uid = $(this).attr("id");
+            var uids = $("#uids").val();
+            var arr = uids.split('|');
+ 
+            var j = 0;
+            var newarr = Array();
+            for(var i=0;i<arr.length;i++){
+                if(arr[i] != uid){
+                    newarr[j++] = arr[i];
+                }
+            }
+ 
+            uids = newarr.join("|");
+            $("#uids").val(uids);
+ 
+            var obj_tr = $(this).parents('span');
+            obj_tr.remove();
+ 
+            if(uids == ""){
+                $(".div_userlist").hide();
+            }
+        });
+ 
+        $('.trs').live('click',function(){
+            var uid = $(this).attr("id");
+            var uids = $("#uids").val();
+ 
+            if(uids != ""){
+                uids = uids + "|";
+            }
+ 
+            if(uids.indexOf("|" + uid + "|") > 0 || uids.indexOf(uid + "|")==0){
+                _uids = uids.replace(uid + "|","");
+ 
+                uids = _uids.substring(0,_uids.length-1);
+                $("#uids").val(uids);
+ 
+                var _arr = uid.split(',');
+                var _uid = _arr[0];
+                _uid = _uid.replace(/ /g,"_");
+                $("#span_" + _uid).remove();
+ 
+                if(uids == ""){
+                    $(".div_userlist").hide();
+                }
+ 
+                borderize_off(this);
+            }
+            else{
+                uids = uids + uid;
+ 
+                $("#uids").val(uids);
+                $(".div_userlist").show();
+ 
+                var _arr = uid.split(',');
+                var username = _arr[1];
+ 
+                _uid = _arr[0].replace(/ /g,"_");
+                $('<span id="span_' + _uid + '">' + username + '<a id="' + uid + '" href="javascript:void(0)" class="close deluser"></a></span>').prependTo(".userlist");
+ 
+                borderize_on(this);
+            }
+        });
+ 
+        $('.addall').live('click',function(){
+            var uids = $("#uids").val();
+ 
+            var objs = $('tr[name^="trs[]"]');
+            for(var i=0;i<objs.length;i++){
+                var elm = objs[i];
+                var uid = elm.id;
+ 
+                if(uids.indexOf("|" + uid + "|") <= 0 && uids.indexOf(uid + "|")!=0){
+                    if(uids != ""){
+                        uids = uids + "|";
+                    }
+ 
+                    uids = uids + uid;
+ 
+                    var _arr = uid.split(',');
+                    var username = _arr[1];
+ 
+                    _uid = _arr[0].replace(/ /g,"_");
+                    $('<span id="span_' + _uid + '">' + username + '<a id="' + uid + '" href="javascript:void(0)" class="close deluser"></a></span>').prependTo(".userlist");
+ 
+                    borderize_on(elm);
+                }
+            }
+ 
+            if(uids != ""){
+                $("#uids").val(uids);
+                $(".div_userlist").show();
+            }
+        });
+ 
+        $('.delall').live('click',function(){
+            var uids = $("#uids").val();
+ 
+            if(uids != ""){
+                uids = uids + "|";
+            }
+            else{
+                return false;
+            }
+ 
+            var objs = $('tr[name^="trs[]"]');
+            for(var i=0;i<objs.length;i++){
+                var elm = objs[i];
+                var uid = elm.id;
+ 
+                if(uids.indexOf("|" + uid + "|") > 0 || uids.indexOf(uid + "|")==0){
+                    uids = uids.replace(uid + "|","");
+ 
+                    var _arr = uid.split(',');
+                    var _uid = _arr[0];
+                    _uid = _uid.replace(/ /g,"_");
+                    $("#span_" + _uid).remove();
+ 
+                    borderize_off(elm);
+                }
+            }
+ 
+            uids = uids.substring(0,uids.length-1);
+            $("#uids").val(uids);
+ 
+            if(uids == ""){
+                $(".div_userlist").hide();
+            }
+        });
+ 
+        $(".getuserlist").bind("click",function(){
+            $.post("./index.php?m=activity&a=test",{act:"getuserlist"},function(data){
+                if(data == "no auth"){
+                    alert("没有权限");
+                    return false;
+                }
+ 
+                $(".sel_userlist").html(data);
+                $(".sel_userlist").show();
+                $(".zhezhao").show();
+ 
+                // select框模拟
+                $('.jssel').selectBox({'selectClassName':'.jsk','selectList':'.condt'});
+            });
+        });
+ 
+        $(".search").live("click",function(){
+            var system = $("#search_system").val();
+            var city = $("#search_city").val();
+            var username = $("#search_name").val();
+ 
+            if((system == 0 || system == '') && (city == 0 || city == '') && (username == "" || username == '请输入')){
+                alert("请至少选择一个条件~");
+                return false;
+            }
+ 
+            $.post("./index.php?m=activity&a=test",{system:system,city:city,username:username,act:"searchuser"},function(data){
+                if(data == "no auth"){
+                    alert("没有权限");
+                    return false;
+                }
+ 
+                $("#search_userlist").html(data);
+ 
+                var objs = $('tr[name^="trs[]"]');
+                for(var i=0;i<objs.length;i++){
+                    var elm = objs[i];
+ 
+                    var uid = elm.id;
+                    var uids = $("#uids").val();
+ 
+                    if(uids != ""){
+                        uids = uids + "|";
+                    }
+ 
+                    if(uids.indexOf("|" + uid + "|") > 0 || uids.indexOf(uid + "|")==0){
+                        borderize_on(elm);
+                    }
+                }
+            });
+        });
+ 
+        $('.addmarkuser').click(function(){
+            var username = $("#mark_username").val();
+            var uids = $("#markuids").val();
+ 
+            if(username == "" || username == "请输入"){
+                alert("请输入阅卷人姓名~");
+                return false;
+            }
+ 
+            var arr = username.split(',');
+ 
+            if(arr.length != 4){
+                alert("阅卷人姓名格式错误\n正确格式为：姓名,部门,拼音,\n\n请使用联想功能录入");
+                return false;
+            }
+ 
+            var uid = arr[2] + "," + arr[0];
+            username = arr[0];
+ 
+            if(uids != ""){
+                uids = uids + "|";
+            }
+ 
+            if(uids.indexOf("|" + uid + "|") > 0 || uids.indexOf(uid + "|")==0){
+                alert("该阅卷人已存在~~");
+                return false;
+            }
+            else{
+                uids = uids + uid;
+ 
+                $("#markuids").val(uids);
+                $(".div_markuserlist").show();
+ 
+                $('<span>' + username + '<a id="' + uid + '" href="javascript:void(0)" class="close delmarkuser"></a></span>').prependTo(".markuserlist");
+            }
+        });
+ 
+        $('.delmarkuser').live('click',function(){
+            var uid = $(this).attr("id");
+            var uids = $("#markuids").val();
+            var arr = uids.split('|');
+ 
+            var j = 0;
+            var newarr = Array();
+            for(var i=0;i<arr.length;i++){
+                if(arr[i] != uid){
+                    newarr[j++] = arr[i];
+                }
+            }
+ 
+            uids = newarr.join("|");
+            $("#markuids").val(uids);
+ 
+            var obj_tr = $(this).parents('span');
+            obj_tr.remove();
+ 
+            if(uids == ""){
+                $(".div_markuserlist").hide();
+            }
+        });
+ 
+        $(".close-t,.sjqux").live("click",function(){
+            $(".sel_userlist").html();
+            $(".sel_userlist").hide();
+            $(".zhezhao").hide();
+        });
+ 
+        $("#username").autocomplete('?m=activity&a=test&act=getuser',{
+            width: 250,
+            multiple: true,
+            matchContains: "word",
+            max: 1000
+        }).result(function(event,data,formatted){
+        });
+ 
+        $("#mark_username").autocomplete('?m=activity&a=test&act=getuser&type=1',{
+            width: 250,
+            multiple: true,
+            matchContains: "word",
+            max: 1000
+        }).result(function(event,data,formatted){
+        });
+    });
+ 
+    function chkfrm(frm){
+        if(frm.title.value == ''){
+            alert('请填写考试名称!');
+            frm.title.focus();
+            return false;
+        }
+ 
+        if(frm.type.value == '' || frm.type.value == 0){
+            alert('请选择考试类型!');
+            frm.testtype.focus();
+            return false;
+        }
+ 
+        if(frm.input_sid.value == '' || frm.input_sid.value == 0){
+            alert('请选择所属体系!');
+            frm.input_system.focus();
+            return false;
+        }
+ 
+        if(frm.pid.value == '' || frm.pid.value == 0){
+            alert('请选择考试试卷!');
+            frm.papertitle.focus();
+            return false;
+        }
+ 
+        if(frm.type.value == 2){
+            if(frm.uids.value == ''){
+                alert('请选择参与人!');
+                frm.username.focus();
+                return false;
+            }
+ 
+            if(frm.timebegin.value == ''){
+                alert('请填写考试开始时间!');
+                frm.timebegin.focus();
+                return false;
+            }
+        }
+ 
+        var timespan = frm.timespan.value;
+        if(isNaN(timespan) || timespan <= 0){
+            timespan = 0;
+        }
+ 
+        timespan = parseInt(timespan);
+        frm.timespan.value = timespan;
+ 
+        if(timespan == 0){
+            alert('请填写考试时长!');
+            frm.timespan.focus();
+            return false;
+        }
+ 
+        var score = frm.score.value;
+        if(isNaN(score) || score <= 0){
+            score = 0;
+        }
+ 
+        score = parseFloat(score);
+        frm.score.value = score;
+ 
+        if(score == 0){
+            alert('请填写合格分数!');
+            frm.score.focus();
+            return false;
+        }
+ 
+        return true;
+    }
+ 
+    function options_click(name,id){
+        if(name == "system"){
+            if($("#old_system").val() == id){
+                return false;
+            }
+ 
+            if(id == "" || id == 0){
+                $("#old_system").val("");
+                $("#system").html('<li id="0"><a href="javascript:void(0)">选择试卷</a></li>');
+                $("#papertitle").val("选择试卷");
+                $("#pid").val("");
+ 
+                return false;
+            }
+ 
+            $.post("./index.php?m=activity&a=test",{id:id,act:"getpapers"},function(data){
+                $("#old_system").val(id);
+                $("#system").html(data);
+                $("#papertitle").val("选择试卷");
+                $("#pid").val("");
+            });
+        }
+    }
+ 
+    function borderize_on(targetelement){
+        color="#003FBF";
+        targetelement.style.borderColor="black";
+        targetelement.style.backgroundColor=color;
+        targetelement.style.color="white";
+        targetelement.style.fontWeight="bold";
+    }
+ 
+    function borderize_off(targetelement){
+        targetelement.style.backgroundColor="";
+        targetelement.style.borderColor="";
+        targetelement.style.color="";
+        targetelement.style.fontWeight="";
+    }
+ 
+    function trim(str){
+        for(var i=0; i<str.length&&str.charAt(i)==" "; i++);
+        for(var j=str.length; j>0&&str.charAt(j-1)==" "; j--);
+        if(i>j) return  "";  
+        return str.substring(i,j);
+    }
+</script>
+</head>
+ 
+<body>
+ 
+<div class="bg">
+    <div class="rtop">
+        <p class="icon1">考核管理 > 发起考核</p>
+    </div>
+    <div class="kctjcon">
+        <p class="tjtip">注：*为必填项</p>
+ 
+        <form action="?m=activity&a=test" method="post" onsubmit="return chkfrm(this);" class="clearfix" />
+        <table cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <td width="188" align="right"><em class="c-yel">*</em> 考核名称：&nbsp;</td>
+                <td><input type="text" name="title" value="" class="width190" /></td>
+            </tr>
+            <tr>
+                <td align="right" valign="top"><em class="c-yel">*</em> 业务单元：&nbsp;</td>
+                <td>
+                    <div class="jssel" style="z-index:98">
+                        <input type="text" value="房产事业部" name="input_system" class="jsk" readonly /><input type="hidden" name="input_sid" id="input_sid" class="hiddeninput" value="" /> <input type="hidden" id="old_system" value="" />
+                        <ul style="display: none;z-index:100" class="condt">
+                            
+                        </ul>
+                    </div>
+ 
+                    <div class="jssel" style="z-index:49">
+                        <input type="text" value="南京大区" name="papertitle" id="papertitle" class="jsk" readonly /><input type="hidden" name="pid" id="pid" class="hiddeninput" value="" />
+                        <ul id="system" style="display: none;z-index:50" class="condt">
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right" valign="top"><em class="c-yel">*</em> 被考核人：&nbsp;</td>
+                <td>
+                    <input type="text" value="请输入" name="username" id="username" class="width190" style="margin-right:9px;" onfocus="if(value=='请输入'){value=''}" onblur="if(value==''){value='请输入'}" /> <input type="hidden" name="uids" id="uids" value="" /><input type="button" class="btn48 adduser" value="添加" /> <input type="button" class="btn74 getuserlist" style="margin:0;" value="选择用户" />
+ 
+                    <div class="shcon div_userlist" style="width:500px;display:none;">
+                        <div class="tjxm userlist">
+                        
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><em class="c-yel">*</em> 考核周期：&nbsp;</td>
+                <td class="jsline">
+                    <div class="data" style="margin-right:6px;">
+                        <input type="text" name="search_btime" id="search_btime" value="" class="width135" /> <a href="javascript:void(0);" class="dataicon" style="_right:8px;" id="f_trigger_search_btime"></a>
+                    </div>
+                    <div class="data" style="margin-right:6px;_margin-right:8px;">
+                    —
+                    </div>
+                    <div class="data" style="_margin-right:6px;">
+                        <input type="text" name="search_etime" id="search_etime" value="" class="width135" /> <a href="javascript:void(0);" class="dataicon" style="_right:8px;" id="f_trigger_search_etime"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><em class="c-yel">*</em> 考核计划员工填写时间：&nbsp;</td>
+                <td class="jsline">
+                    <div class="data" style="margin-right:6px;">
+                        <input type="text" name="search_btime" id="search_btime" value="" class="width135" /> <a href="javascript:void(0);" class="dataicon" style="_right:8px;" id="f_trigger_search_btime"></a>
+                    </div>
+                    <div class="data" style="margin-right:6px;_margin-right:8px;">
+                    —
+                    </div>
+                    <div class="data" style="_margin-right:6px;">
+                        <input type="text" name="search_etime" id="search_etime" value="" class="width135" /> <a href="javascript:void(0);" class="dataicon" style="_right:8px;" id="f_trigger_search_etime"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><em class="c-yel">*</em> 考核计划直接领导审批时间：&nbsp;</td>
+                <td class="jsline">
+                    <div class="data" style="margin-right:6px;">
+                        <input type="text" name="search_btime" id="search_btime" value="" class="width135" /> <a href="javascript:void(0);" class="dataicon" style="_right:8px;" id="f_trigger_search_btime"></a>
+                    </div>
+                    <div class="data" style="margin-right:6px;_margin-right:8px;">
+                    —
+                    </div>
+                    <div class="data" style="_margin-right:6px;">
+                        <input type="text" name="search_etime" id="search_etime" value="" class="width135" /> <a href="javascript:void(0);" class="dataicon" style="_right:8px;" id="f_trigger_search_etime"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><em class="c-yel">*</em> 考核提报员工填写时间：&nbsp;</td>
+                <td class="jsline">
+                    <div class="data" style="margin-right:6px;">
+                        <input type="text" name="search_btime" id="search_btime" value="" class="width135" /> <a href="javascript:void(0);" class="dataicon" style="_right:8px;" id="f_trigger_search_btime"></a>
+                    </div>
+                    <div class="data" style="margin-right:6px;_margin-right:8px;">
+                    —
+                    </div>
+                    <div class="data" style="_margin-right:6px;">
+                        <input type="text" name="search_etime" id="search_etime" value="" class="width135" /> <a href="javascript:void(0);" class="dataicon" style="_right:8px;" id="f_trigger_search_etime"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right"><em class="c-yel">*</em> 考核提报直接领导审批时间：&nbsp;</td>
+                <td class="jsline">
+                    <div class="data" style="margin-right:6px;">
+                        <input type="text" name="search_btime" id="search_btime" value="" class="width135" /> <a href="javascript:void(0);" class="dataicon" style="_right:8px;" id="f_trigger_search_btime"></a>
+                    </div>
+                    <div class="data" style="margin-right:6px;_margin-right:8px;">
+                    —
+                    </div>
+                    <div class="data" style="_margin-right:6px;">
+                        <input type="text" name="search_etime" id="search_etime" value="" class="width135" /> <a href="javascript:void(0);" class="dataicon" style="_right:8px;" id="f_trigger_search_etime"></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">考核设置：&nbsp;</td>
+                <td><input type="checkbox" name="" /> 按月自动生成</td>
+            </tr>
+        </table>
+ 
+        <div class="kctjbot">
+            <input type="hidden" name="act" value="update" /><input type="hidden" name="referer" value="?m=activity&a=test&pn=1" /><input type="hidden" name="id" value="" />
+            <input type="submit" class="bluebtn" value="确定" /><input type="button" class="btn67" value="返回" onclick="location.href='?m=activity&a=test&pn=1'" />
+        </div>
+        </form>
+    </div>
+</div>
+ 
+<div class="zhezhao" style="display:none"></div>
+<div class="xinzsj sel_userlist" style="display:none;top:110px;width:760px;margin-left:-380px;"></div>
+ 
+</body>
+</html>

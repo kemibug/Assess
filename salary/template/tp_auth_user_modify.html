@@ -1,0 +1,28 @@
+    <div class="tktl"><a class="close-t" href="javascript:void(0)"></a>编辑用户</div>
+    <div class="qx-tkcon">
+        <table cellpadding="0" cellspacing="0" width="100%" class="qxtc-tab">
+            <tr>
+                <td width="25%" align="right">角色：&nbsp;</td>
+                <td width="75%">
+                    <div class="jssel" style="z-index:199">
+                        <input type="text" value="{$arr_groups[$r[gid]]}" name="grouptitle" id="grouptitle" class="jsk" readonly /><input type="hidden" id="gid" class="hiddeninput" value="{$r[gid]}" />
+                        <ul style="display: none;z-index:200" class="condt">
+                        <!--#
+                            if(is_array($arr_groups)){
+                                foreach($arr_groups as $k => $v){
+                        #-->
+                            <li id="{$k}"><a href="javascript:void(0)">{$v}</a></li>
+                        <!--#
+                                }
+                            }
+                        #-->
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><input id="{$_POST[uid]}" type="button" value="保存" class="btn48 save" /></td>
+            </tr>
+        </table>
+    </div>

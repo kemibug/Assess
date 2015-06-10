@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>绩效考核系统</title>
+<link href="http://221.231.141.162/tlfjk/static/css/reset.css" rel="stylesheet" type="text/css" />
+<link href="http://221.231.141.162/tlfjk/static/css/left.css" rel="stylesheet" type="text/css" />
+<link href="http://221.231.141.162/tlfjk/static/css/right.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://221.231.141.162/tlfjk/static/js/jquery-1.5.2.min.js"></script> 
+<script type="text/javascript"> 
+    $(function(){
+        $('.nav-title').bind('click',function(){
+            var self = $(this);
+            $(self.next()).toggle();
+            $(this).find(".jian").toggleClass("jia");
+ 
+            //点击收起时底部边框为0
+            var i = $(this).parent().index();
+            if( i!= 3){
+                $(this).toggleClass("bd");
+            }
+        });
+ 
+        //内部子菜单展开与收起
+        $('.zinav').bind('click',function(){
+            var self = $(this);
+            $(self.next()).toggle();
+            $(this).toggleClass("zinavon");
+        });
+ 
+        //边栏高度
+        resizeleft();
+    });
+ 
+    function resizeleft(){
+        //边栏高度
+        var windowht = $(window).height();
+        $(".gund").css("height",windowht);
+ 
+        var brdrhheight = parseInt($(".brdrh").css("height"));
+        if(brdrhheight < windowht-30){
+            $(".brdrh").css("height",windowht-30);
+        }
+    }
+</script>
+</head>
+ 
+<body>
+    <div class="gund" style="overflow-x:hidden;overflow-y:scroll">
+        <div class="main-left brdrh" id="d_hoscon" style="margin-top: 0px;">
+            <div class="topif"><div class="all-data"><img src="http://oa.house365.com/attachment/hrms_pic/tanyinbing.jpg" height="180" /></div></div>
+            <ul class="nav">
+                
+                <li>
+                    <h3 class="nav-title"><a href="javascript:void(0)" class="jian">考核设置</a></h3>
+                    <ul class="nav-list">
+                        
+                        <li><a href="index.php?m=prjaudit&a=addprj" target="mainFrame" class="icon2">量化指标分类</a></li>
+                        
+                        <li><a href="index.php?m=prjaudit&a=prjprog" target="mainFrame" class="icon2">量化指标管理</a></li>
+                        
+                    </ul>
+                </li>
+                
+                <li>
+                    <h3 class="nav-title"><a href="javascript:void(0)" class="jian">考核管理</a></h3>
+                    <ul class="nav-list">
+                        
+                        <li><a href="create1.html" target="mainFrame" class="icon2">考核汇总</a></li>
+                        
+                        <li><a href="create.html" target="mainFrame" class="icon2">考核发起</a></li>
+                        
+                    </ul>
+                </li>
+                
+                <li>
+                    <h3 class="nav-title"><a href="javascript:void(0)" class="jian">我的考核</a></h3>
+                    <ul class="nav-list">
+                        
+                        <li><a href="index.php?m=member&a=addmem" target="mainFrame" class="icon2">待我考核</a></li>
+                        
+                        <li><a href="index.php?m=member&a=addmem" target="mainFrame" class="icon2">我已考核</a></li>
+                        
+                        <li><a href="index.php?m=member&a=memlist" target="mainFrame" class="icon2">我的考核</a></li>
+                        
+                    </ul>
+                </li>
+                
+                <li>
+                    <h3 class="nav-title"><a href="javascript:void(0)" class="jian">报表统计</a></h3>
+                    <ul class="nav-list">
+                        
+                        <li><a href="index.php?m=report&a=hr" target="mainFrame" class="icon2">绩效报表</a></li>
+                        
+                    </ul>
+                </li>
+                
+                <li>
+                    <h3 class="nav-title"><a href="javascript:void(0)" class="jian">权限管理</a></h3>
+                    <ul class="nav-list">
+                        
+                        <li><a href="index.php?m=auth&a=group" target="mainFrame" class="icon2">角色管理</a></li>
+                        
+                        <li><a href="index.php?m=auth&a=user" target="mainFrame" class="icon2">用户管理</a></li>
+                        
+                    </ul>
+                </li>
+                
+                <li>
+                    <h3 class="nav-title"><a href="javascript:void(0)" class="jian">日志管理</a></h3>
+                    <ul class="nav-list">
+                        
+                        <li><a href="index.php?m=log&a=list" target="mainFrame" class="icon2">日志列表</a></li>
+                        
+                    </ul>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
